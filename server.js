@@ -18,19 +18,38 @@ app.get("/api/notes", function(req, res) {
     //read file & parse to obj to send to browser
     fs.readFile("./db/db.json", (err, data) => {
         if (err) throw err;
-        const dataObj = JSON.parse(data);
+        let dataObj = JSON.parse(data);
         res.json(dataObj);
     });
 });
 
 app.post("/api/notes", function(req, res) {
-    //
-    res.json();
+    //get `req.body` into a variable
+    let newNote = req.body;
+    //get exsisting db.json file into object (return parsed file to let `dataObj`)
+    fs.readFile("./db/db.json", (err, data) => {
+        if (err) throw err;
+        let dataObj = JSON.parse(data);
+        //push `newNote` into `dataObj`
+        dataObj.push(newNote);
+
+        let updateDB = JSON.stringify(dataObj);
+
+        //make the new `dataObj` into json and save to db.json
+        fs.writeFile("./db/db.json", updateDB, (err) => {
+            if (err) throw err;
+            console.log("data written hopefully...");
+        });  
+    });
+    //send updated note list back to client
+    fs.readFile("./db/db.json", (err, data) => {
+        if (err) throw err;
+        let dataObj = JSON.parse(data);
+        res.json(dataObj);
+    });
 });
 
 app.delete("/api/notes/:id", function(req, res) {
-    //
-    res.json();
 });
 
 //HTML routes!
