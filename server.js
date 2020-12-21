@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 //Express Dependencies Setup
 var express = require("express");
 var app = express();
@@ -6,21 +8,28 @@ var PORT = process.env.PORT || 3000;
 var path = require("path");
 
 //Middleware!(tm)
-app.use(express.static('public'))
+app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 //Routes
 //API routes!
 app.get("/api/notes", function(req, res) {
-    res.json();
+    //read file & parse to obj to send to browser
+    fs.readFile("./db/db.json", (err, data) => {
+        if (err) throw err;
+        const dataObj = JSON.parse(data);
+        res.json(dataObj);
+    });
 });
 
 app.post("/api/notes", function(req, res) {
+    //
     res.json();
 });
 
 app.delete("/api/notes/:id", function(req, res) {
+    //
     res.json();
 });
 
